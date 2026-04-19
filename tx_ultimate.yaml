@@ -447,6 +447,7 @@ i2s_audio:
   - id: audio_i2s
     i2s_lrclk_pin: ${audio_lrclk_pin}
     i2s_bclk_pin: ${audio_bclk_pin}
+    i2s_comm_fmt: lsb
 
 # 2. The Speaker (The "Worker")
 # https://esphome.io/components/media_player/speaker/
