@@ -458,7 +458,7 @@ speaker:
     i2s_audio_id: audio_i2s
     channel: mono
     # Most Sonoff I2S devices prefer the MSB or LSB format over standard
-    i2s_comm_fmt: i2s_msb 
+    i2s_comm_fmt: i2s_lsb 
     # Force bit depth to match what Piper/WAV is sending (16-bit)
     bits_per_sample: 16bit
     buffer_duration: 100ms
