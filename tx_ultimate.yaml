@@ -441,9 +441,8 @@ speaker:
     dac_type: external
     i2s_dout_pin: ${audio_sdata_pin}
     i2s_audio_id: audio_i2s
-    # Note: 'lsb' is now often handled via bit_depth or specific dac_type settings
-    # If it fails, check the specific DAC requirements for your board
-    mode: mono
+    channel: mono
+    # bits_per_sample: 16bit
 
 media_player:
   - platform: speaker
