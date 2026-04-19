@@ -461,6 +461,8 @@ speaker:
     i2s_comm_fmt: i2s_msb 
     # Force bit depth to match what Piper/WAV is sending (16-bit)
     bits_per_sample: 16bit
+    buffer_duration: 200ms
+    sample_rate: 16000
   # The Mixer (The Traffic Cop)
   # This creates two virtual IDs that both point to the real speaker
   - platform: mixer
