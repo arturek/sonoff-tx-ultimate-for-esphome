@@ -435,15 +435,20 @@ light:
           speed: 10
           width: 20
 
-media_player:
+speaker:
   - platform: i2s_audio
-    id: media_out
-    name: ${friendly_name} Player
+    id: my_speaker
     dac_type: external
     i2s_dout_pin: ${audio_sdata_pin}
     i2s_audio_id: audio_i2s
-    i2s_comm_fmt: lsb
+    # Note: 'lsb' is now often handled via bit_depth or specific dac_type settings
+    # If it fails, check the specific DAC requirements for your board
     mode: mono
+
+media_player:
+  - platform: speaker
+    id: media_out
+    speaker: my_speaker
 
 i2s_audio:
   id: audio_i2s
