@@ -435,15 +435,13 @@ light:
           speed: 10
           width: 20
 
-media_player:
-  - platform: speaker
-    id: media_out
-    name: ${friendly_name} Player
-    speaker:
-      id: my_speaker
-    announcement_pipeline:
-      name: "default"
+# 1. The I2S hardware definition
+i2s_audio:
+  - id: audio_i2s
+    i2s_lrclk_pin: ${audio_lrclk_pin}
+    i2s_bclk_pin: ${audio_bclk_pin}
 
+# 2. The Speaker (The "Worker")
 speaker:
   - platform: i2s_audio
     id: my_speaker
@@ -451,13 +449,17 @@ speaker:
     i2s_dout_pin: ${audio_sdata_pin}
     i2s_audio_id: audio_i2s
     channel: mono
-    # bits_per_sample: 16bit
 
-i2s_audio:
-  - id: audio_i2s
-    i2s_lrclk_pin: ${audio_lrclk_pin}
-    i2s_bclk_pin: ${audio_bclk_pin}
-
+# 3. The Media Player (The "Interface")
+media_player:
+  - platform: speaker
+    id: media_out
+    name: "${friendly_name} Player"
+    # In 2026.04, use the top-level 'source' or 'speaker' without the 'id:' nesting
+    speaker: my_speaker
+    # Move the pipeline outside of a dictionary format
+    announcement_pipeline: default
+    
 uart:
   tx_pin: ${uart_tx_pin}
   rx_pin: ${uart_rx_pin}
