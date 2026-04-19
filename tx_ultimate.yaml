@@ -463,7 +463,7 @@ media_player:
     name: "${friendly_name} Player"
     # Aggressive buffering for non-PSRAM devices
     # If 16kb failed, we must go lower or optimize the task
-    buffer_size: 12kb
+    buffer_size: 16384
     announcement_pipeline:
       speaker: speaker_id
       format: WAV
