@@ -27,7 +27,7 @@ substitutions:
 
   long_press_brightness: "1"
   long_press_color: "{100,0,0}"
-  long_press_effect: ""
+  long_press_effect: "none"
 
   multi_touch_brightness: "1"
   multi_touch_color: "{0,0,0}"
@@ -35,11 +35,11 @@ substitutions:
 
   swipe_left_brightness: "1"
   swipe_left_color: "{0,100,0}"
-  swipe_left_effect: ""
+  swipe_left_effect: "none"
 
   swipe_right_brightness: "1"
   swipe_right_color: "{100,0,70}"
-  swipe_right_effect: ""
+  swipe_right_effect: "none"
 
   relay_1_pin: GPIO18
   relay_2_pin: GPIO17
@@ -435,20 +435,40 @@ light:
           speed: 10
           width: 20
 
-media_player:
+# 1. The I2S hardware definition
+i2s_audio:
+  - id: audio_i2s
+    i2s_lrclk_pin: ${audio_lrclk_pin}
+    i2s_bclk_pin: ${audio_bclk_pin}
+
+# 2. The Speaker (The "Worker")
+# https://esphome.io/components/media_player/speaker/
+speaker:
   - platform: i2s_audio
-    id: media_out
-    name: ${friendly_name} Player
+    id: speaker_id
     dac_type: external
     i2s_dout_pin: ${audio_sdata_pin}
     i2s_audio_id: audio_i2s
-    i2s_comm_fmt: lsb
-    mode: mono
+    channel: mono
+    i2s_comm_fmt: i2s_lsb
+    # 16-bit is the default but it is specified here for clarity
+    bits_per_sample: 16bit
+    sample_rate: 16000 # default
+  # Do not enable media pipeline and use the speaker directly to lower the RAM usage.
 
-i2s_audio:
-  id: audio_i2s
-  i2s_lrclk_pin: ${audio_lrclk_pin}
-  i2s_bclk_pin: ${audio_bclk_pin}
+# 3. The Media Player (The "Interface")
+media_player:
+  - platform: speaker
+    id: media_out
+    name: "${friendly_name} Player"
+    # Aggressive buffering for non-PSRAM devices
+    # If 16kb failed, we must go lower or optimize the task
+    buffer_size: 16384
+    announcement_pipeline:
+      speaker: speaker_id
+      format: WAV
+      sample_rate: 16000  # Standard for TTS, saves 3x RAM vs 44.1kHz
+      num_channels: 1
 
 uart:
   tx_pin: ${uart_tx_pin}
