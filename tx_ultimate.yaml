@@ -435,6 +435,15 @@ light:
           speed: 10
           width: 20
 
+media_player:
+  - platform: speaker
+    id: media_out
+    name: ${friendly_name} Player
+    # Use 'speaker_id' to point to your speaker component
+    speaker_id: my_speaker 
+    # This is now mandatory in 2026.04
+    announcement_pipeline: default 
+
 speaker:
   - platform: i2s_audio
     id: my_speaker
@@ -444,15 +453,10 @@ speaker:
     channel: mono
     # bits_per_sample: 16bit
 
-media_player:
-  - platform: speaker
-    id: media_out
-    speaker: my_speaker
-
 i2s_audio:
-  id: audio_i2s
-  i2s_lrclk_pin: ${audio_lrclk_pin}
-  i2s_bclk_pin: ${audio_bclk_pin}
+  - id: audio_i2s
+    i2s_lrclk_pin: ${audio_lrclk_pin}
+    i2s_bclk_pin: ${audio_bclk_pin}
 
 uart:
   tx_pin: ${uart_tx_pin}
