@@ -475,14 +475,14 @@ media_player:
     name: "${friendly_name} Player"
     # Aggressive buffering for non-PSRAM devices
     # If 16kb failed, we must go lower or optimize the task
-    buffer_size: 12kb
+    buffer_size: 12288
     announcement_pipeline:
-      speaker: media_spk
+      speaker: announcement_spk
       format: WAV
       sample_rate: 16000  # Standard for TTS, saves 3x RAM vs 44.1kHz
       num_channels: 1
     media_pipeline:
-      speaker: announcement_spk
+      speaker: media_spk
       format: WAV
       sample_rate: 16000
       num_channels: 1
