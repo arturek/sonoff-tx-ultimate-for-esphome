@@ -455,11 +455,11 @@ media_player:
   - platform: speaker
     id: media_out
     name: "${friendly_name} Player"
-    # In 2026.04, use the top-level 'source' or 'speaker' without the 'id:' nesting
-    speaker: my_speaker
-    # Move the pipeline outside of a dictionary format
-    announcement_pipeline: default
-    
+    announcement_pipeline:
+      speaker: my_speaker
+    media_pipeline:
+      speaker: my_speaker
+  
 uart:
   tx_pin: ${uart_tx_pin}
   rx_pin: ${uart_rx_pin}
