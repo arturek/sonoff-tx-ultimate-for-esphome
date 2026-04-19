@@ -466,12 +466,18 @@ media_player:
   - platform: speaker
     id: media_out
     name: "${friendly_name} Player"
-    buffer_size: 16kb  # Reduced from the default (which is often 32kb or 64kb)
+    # Aggressive buffering for non-PSRAM devices
+    # If 16kb failed, we must go lower or optimize the task
+    buffer_size: 12kb
     announcement_pipeline:
       speaker: media_spk
+      format: WAV
+      sample_rate: 16000  # Standard for TTS, saves 3x RAM vs 44.1kHz
       num_channels: 1
     media_pipeline:
       speaker: announcement_spk
+      format: WAV
+      sample_rate: 16000
       num_channels: 1
 
 uart:
