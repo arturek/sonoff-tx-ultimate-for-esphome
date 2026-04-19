@@ -439,10 +439,10 @@ media_player:
   - platform: speaker
     id: media_out
     name: ${friendly_name} Player
-    # Use 'speaker_id' to point to your speaker component
-    speaker_id: my_speaker 
-    # This is now mandatory in 2026.04
-    announcement_pipeline: default 
+    speaker:
+      id: my_speaker
+    announcement_pipeline:
+      name: "default"
 
 speaker:
   - platform: i2s_audio
