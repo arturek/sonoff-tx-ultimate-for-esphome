@@ -99,7 +99,13 @@ esphome:
 esp32:
   board: esp32dev
   framework:
-    type: arduino
+    type: esp-idf
+    sdkconfig_options:
+      # Increases the stack size for the main task (helps avoid overflows with custom code)
+      CONFIG_ESP_MAIN_TASK_STACK_SIZE: "8192"
+      # Optimizes memory allocation for audio buffers
+      CONFIG_MBEDTLS_DYNAMIC_FREE_CA_CERT: y
+      CONFIG_MBEDTLS_DYNAMIC_BUFFER: y
 
 logger:
 #  hardware_uart: UART2
