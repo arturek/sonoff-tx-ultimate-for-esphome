@@ -1,6 +1,4 @@
 substitutions:
-  i2s_comm_fmt: i2s_lsb
-  use_legacy_speaker: false
   name: "shys-tx-ultimate"
   friendly_name: "TX Ultimate"
 
@@ -449,7 +447,6 @@ i2s_audio:
   - id: audio_i2s
     i2s_lrclk_pin: ${audio_lrclk_pin}
     i2s_bclk_pin: ${audio_bclk_pin}
-    # use_legacy: ${use_legacy_speaker}
 
 # 2. The Speaker (The "Worker")
 # https://esphome.io/components/media_player/speaker/
@@ -460,22 +457,10 @@ speaker:
     i2s_dout_pin: ${audio_sdata_pin}
     i2s_audio_id: audio_i2s
     channel: mono
-    # Most Sonoff I2S devices prefer the MSB or LSB format over standard
-    i2s_comm_fmt: ${i2s_comm_fmt}
-    # Force bit depth to match what Piper/WAV is sending (16-bit)
-    bits_per_sample: 16bit # default
-    # buffer_duration: 100ms
+    i2s_comm_fmt: i2s_lsb
+    # 16-bit is the default but it is specified here for clarity
+    bits_per_sample: 16bit
     sample_rate: 16000 # default
-  # # The Mixer (The Traffic Cop)
-  # # This creates two virtual IDs that both point to the real speaker
-  # - platform: mixer
-  #   id: mixer_id
-  #   output_speaker: speaker_id
-  #   # We define the sources directly here without resamplers in between
-  #   # Resamplers cannot be added because of the lack of memory.
-  #   source_speakers:
-  #     - id: announcement_spk
-  #     - id: media_spk
 
 # 3. The Media Player (The "Interface")
 media_player:
@@ -485,16 +470,12 @@ media_player:
     # Aggressive buffering for non-PSRAM devices
     # If 16kb failed, we must go lower or optimize the task
     buffer_size: 16384
+    # Do not enable media pipeline and use the speaker directly to lower the RAM usage.
     announcement_pipeline:
       speaker: speaker_id
       format: WAV
       sample_rate: 16000  # Standard for TTS, saves 3x RAM vs 44.1kHz
       num_channels: 1
-    # media_pipeline:
-    #   speaker: media_spk
-    #   format: WAV
-    #   sample_rate: 16000
-    #   num_channels: 1
 
 uart:
   tx_pin: ${uart_tx_pin}
