@@ -450,16 +450,11 @@ speaker:
     i2s_dout_pin: ${audio_sdata_pin}
     i2s_audio_id: audio_i2s
     channel: mono
-  # The Mixer (The Traffic Cop)
-  # This creates two virtual IDs that both point to the real speaker
-- platform: mixer
-    id: mixer_id
-    output_speaker: real_hw_spk
-    # We define the sources directly here without resamplers in between
-    # Resamplers cannot be added because of the lack of memory.
-    source_speakers:
-      - id: announcement_spk
-      - id: media_spk
+    i2s_comm_fmt: i2s_lsb
+    # 16-bit is the default but it is specified here for clarity
+    bits_per_sample: 16bit
+    sample_rate: 16000 # default
+  # Do not enable media pipeline and use the speaker directly to lower the RAM usage.
 
 # 3. The Media Player (The "Interface")
 media_player:
@@ -470,14 +465,9 @@ media_player:
     # If 16kb failed, we must go lower or optimize the task
     buffer_size: 12kb
     announcement_pipeline:
-      speaker: media_spk
+      speaker: speaker_id
       format: WAV
       sample_rate: 16000  # Standard for TTS, saves 3x RAM vs 44.1kHz
-      num_channels: 1
-    media_pipeline:
-      speaker: announcement_spk
-      format: WAV
-      sample_rate: 16000
       num_channels: 1
 
 uart:
