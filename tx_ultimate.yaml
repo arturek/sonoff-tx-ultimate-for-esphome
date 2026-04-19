@@ -457,6 +457,10 @@ speaker:
     i2s_dout_pin: ${audio_sdata_pin}
     i2s_audio_id: audio_i2s
     channel: mono
+    # Most Sonoff I2S devices prefer the MSB or LSB format over standard
+    i2s_comm_fmt: i2s_msb 
+    # Force bit depth to match what Piper/WAV is sending (16-bit)
+    bits_per_sample: 16bit
   # The Mixer (The Traffic Cop)
   # This creates two virtual IDs that both point to the real speaker
   - platform: mixer
