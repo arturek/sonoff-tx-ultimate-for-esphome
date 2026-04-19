@@ -442,6 +442,7 @@ i2s_audio:
     i2s_bclk_pin: ${audio_bclk_pin}
 
 # 2. The Speaker (The "Worker")
+# https://esphome.io/components/media_player/speaker/
 speaker:
   - platform: i2s_audio
     id: speaker_id
@@ -451,31 +452,28 @@ speaker:
     channel: mono
   # The Mixer (The Traffic Cop)
   # This creates two virtual IDs that both point to the real speaker
-  - platform: mixer
-    id: mixer_speaker_id
-    output_speaker: speaker_id
+- platform: mixer
+    id: mixer_id
+    output_speaker: real_hw_spk
+    # We define the sources directly here without resamplers in between
+    # Resamplers cannot be added because of the lack of memory.
     source_speakers:
-      - id: announcement_spk_mixer_input
-      - id: media_spk_mixer_input
-  - platform: resampler
-    id: media_spk_resampling_input
-    output_speaker: media_spk_mixer_input
-  - platform: resampler
-    id: announcement_spk_resampling_input
-    output_speaker: announcement_spk_mixer_input
+      - id: announcement_spk
+      - id: media_spk
 
 # 3. The Media Player (The "Interface")
 media_player:
   - platform: speaker
     id: media_out
     name: "${friendly_name} Player"
+    # buffer_size: 16kb  # Reduced from the default (which is often 32kb or 64kb)
     announcement_pipeline:
-      speaker: announcement_spk_resampling_input
+      speaker: media_spk
       num_channels: 1
     media_pipeline:
-      speaker: media_spk_resampling_input
+      speaker: announcement_spk
       num_channels: 1
-  
+
 uart:
   tx_pin: ${uart_tx_pin}
   rx_pin: ${uart_rx_pin}
