@@ -460,8 +460,8 @@ speaker:
     channel: mono
     # Most Sonoff I2S devices prefer the MSB or LSB format over standard
     i2s_comm_fmt: ${i2s_comm_fmt}
-    # # Force bit depth to match what Piper/WAV is sending (16-bit)
-    # bits_per_sample: 16bit
+    # Force bit depth to match what Piper/WAV is sending (16-bit)
+    bits_per_sample: 16bit
     # buffer_duration: 100ms
     sample_rate: 16000
   # The Mixer (The Traffic Cop)
@@ -482,7 +482,7 @@ media_player:
     name: "${friendly_name} Player"
     # Aggressive buffering for non-PSRAM devices
     # If 16kb failed, we must go lower or optimize the task
-    # buffer_size: 12288
+    buffer_size: 16384
     announcement_pipeline:
       speaker: announcement_spk
       format: WAV
