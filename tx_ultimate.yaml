@@ -461,7 +461,7 @@ speaker:
   # This creates two virtual IDs that both point to the real speaker
   - platform: mixer
     id: mixer_id
-    output_speaker: real_hw_spk
+    output_speaker: speaker_id
     # We define the sources directly here without resamplers in between
     # Resamplers cannot be added because of the lack of memory.
     source_speakers:
