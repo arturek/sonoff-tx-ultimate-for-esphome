@@ -458,7 +458,7 @@ speaker:
     channel: mono
   # The Mixer (The Traffic Cop)
   # This creates two virtual IDs that both point to the real speaker
-- platform: mixer
+  - platform: mixer
     id: mixer_id
     output_speaker: real_hw_spk
     # We define the sources directly here without resamplers in between
