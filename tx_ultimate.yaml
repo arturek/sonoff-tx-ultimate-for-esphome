@@ -466,7 +466,7 @@ media_player:
   - platform: speaker
     id: media_out
     name: "${friendly_name} Player"
-    # buffer_size: 16kb  # Reduced from the default (which is often 32kb or 64kb)
+    buffer_size: 16kb  # Reduced from the default (which is often 32kb or 64kb)
     announcement_pipeline:
       speaker: media_spk
       num_channels: 1
