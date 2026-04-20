@@ -99,7 +99,13 @@ esphome:
 esp32:
   board: esp32dev
   framework:
-    type: arduino
+    type: esp-idf
+    sdkconfig_options:
+      # Increases the stack size for the main task (helps avoid overflows with custom code)
+      CONFIG_ESP_MAIN_TASK_STACK_SIZE: "8192"
+      # Optimizes memory allocation for audio buffers
+      CONFIG_MBEDTLS_DYNAMIC_FREE_CA_CERT: y
+      CONFIG_MBEDTLS_DYNAMIC_BUFFER: y
 
 logger:
 #  hardware_uart: UART2
@@ -348,13 +354,15 @@ switch:
     name: "${friendly_name} Restart"
 
 light:
-  - platform: neopixelbus
-    type: GRB
-    variant: WS2811
+  - platform: esp32_rmt_led_strip
+    rgb_order: GRB
+    # WS2811 usually uses 800kHz timing, which matches the 'ws2812' chipset setting
+    chipset: ws2812
     pin: ${led_pin}
     num_leds: 28
     name: "NeoPixel Light"
     id: leds
+    use_psram: false
     default_transition_length: 0s
     effects:
       - addressable_rainbow:
@@ -365,7 +373,6 @@ light:
           name: "Pulse"
           transition_length: 1.4s
           update_interval: 1s
-
     on_turn_off:
       then:
         - script.execute: refresh_led_default
@@ -454,7 +461,6 @@ speaker:
     # 16-bit is the default but it is specified here for clarity
     bits_per_sample: 16bit
     sample_rate: 16000 # default
-  # Do not enable media pipeline and use the speaker directly to lower the RAM usage.
 
 # 3. The Media Player (The "Interface")
 media_player:
@@ -464,6 +470,7 @@ media_player:
     # Aggressive buffering for non-PSRAM devices
     # If 16kb failed, we must go lower or optimize the task
     buffer_size: 16384
+    # Do not enable media pipeline and use the speaker directly to lower the RAM usage.
     announcement_pipeline:
       speaker: speaker_id
       format: WAV
