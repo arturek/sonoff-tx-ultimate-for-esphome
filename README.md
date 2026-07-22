@@ -1,12 +1,12 @@
 #### Choose language:
-[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome/blob/master/README.md) 
-[![de](https://img.shields.io/badge/lang-de-blue.svg)](https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome/blob/master/README.de.md)
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/arturek/sonoff-tx-ultimate-for-esphome/blob/master/README.md) 
+[![de](https://img.shields.io/badge/lang-de-blue.svg)](https://github.com/arturek/sonoff-tx-ultimate-for-esphome/blob/master/README.de.md)
 
 
 # SONOFF TX Ultimate for ESPHome (Custom Component)
 
 > **Existing installations:** Device configurations are not migrated automatically; running setups require a one-time adjustment.  
-> 1. **`packages:`** YAML packages (relays, LEDs, Wi‑Fi, …) are hosted in **[shys-collection](https://github.com/SmartHome-yourself/shys-collection/tree/main/templates/esphome/setups/sonoff-tx-ultimate)**. Update the `packages:` URL in your ESPHome configuration to the new path (see [Installation](#installation)).  
+> 1. **`packages:`** YAML packages (relays, LEDs, Wi‑Fi, …) are hosted in **[shys-collection](https://github.com/arturek/shys-collection/tree/main/templates/esphome/setups/sonoff-tx-ultimate)**. Update the `packages:` URL in your ESPHome configuration to the new path (see [Installation](#installation)).  
 > 2. **`external_components`:** The URL for the external component is unchanged and does not need to be modified — the custom component for touch handling remains in this repository (`sonoff-tx-ultimate-for-esphome`).
 
 This is an ESPHome custom component for the SONOFF TX Ultimate Smart Switch.  
@@ -36,7 +36,7 @@ Use the code **DANIELSCHSONOFF** to get an additional 10% off your order.
   
 ## Home Assistant device
 The screenshot shows an example of the device in Home Assistant after integration.  
-![image](https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome/assets/705724/86a6f88e-b453-492e-b9cf-ab50b69ad2e9)
+![image](https://github.com/arturek/sonoff-tx-ultimate-for-esphome/assets/705724/86a6f88e-b453-492e-b9cf-ab50b69ad2e9)
   
 &nbsp;    
   
@@ -46,11 +46,11 @@ The screenshot shows an example of the device in Home Assistant after integratio
 
 ## Device setups (YAML packages)
 
-Full ESPHome configurations (standard, US, cover, local, …) with the short filenames (`tx_ult_*.yaml`) live in **[shys-collection](https://github.com/SmartHome-yourself/shys-collection/tree/main/templates/esphome/setups/sonoff-tx-ultimate)**.
+Full ESPHome configurations (standard, US, cover, local, …) with the short filenames (`tx_ult_*.yaml`) live in **[shys-collection](https://github.com/arturek/shys-collection/tree/main/templates/esphome/setups/sonoff-tx-ultimate)**.
 
 Overview on the website: [ESPHome Setups – SONOFF TX Ultimate](https://www.smarthomeyourself.de/diy-collections/esphome/esphome-setups-sonoff-tx-ultimate)
 
-See the [setup README](https://github.com/SmartHome-yourself/shys-collection/blob/main/templates/esphome/setups/sonoff-tx-ultimate/README.md) for package URLs, variants, and substitutions.
+See the [setup README](https://github.com/arturek/shys-collection/blob/main/templates/esphome/setups/sonoff-tx-ultimate/README.md) for package URLs, variants, and substitutions.
 
 This repository contains only the **custom component** and a minimal [component_test.yaml](component_test.yaml) to validate builds.
 
@@ -62,7 +62,7 @@ This repository contains only the **custom component** and a minimal [component_
 external_components:
   - source:
       type: git
-      url: https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome
+      url: https://github.com/arturek/sonoff-tx-ultimate-for-esphome
       ref: main
     components: [tx_ultimate_touch]
 ```
@@ -71,7 +71,7 @@ external_components:
 
 ## Local component copy
 
-Copy the [tx_ultimate_touch folder](https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome/tree/main/components/) into your ESPHome directory and point `external_components` to that path.
+Copy the [tx_ultimate_touch folder](https://github.com/arturek/sonoff-tx-ultimate-for-esphome/tree/main/components/) into your ESPHome directory and point `external_components` to that path.
 
 &nbsp;
 
