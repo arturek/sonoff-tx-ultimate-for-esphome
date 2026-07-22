@@ -4,6 +4,11 @@
 
 
 # SONOFF TX Ultimate for ESPHome (Custom Component)
+
+> **Existing installations:** Device configurations are not migrated automatically; running setups require a one-time adjustment.  
+> 1. **`packages:`** YAML packages (relays, LEDs, Wi‑Fi, …) are hosted in **[shys-collection](https://github.com/SmartHome-yourself/shys-collection/tree/main/templates/esphome/setups/sonoff-tx-ultimate)**. Update the `packages:` URL in your ESPHome configuration to the new path (see [Installation](#installation)).  
+> 2. **`external_components`:** The URL for the external component is unchanged and does not need to be modified — the custom component for touch handling remains in this repository (`sonoff-tx-ultimate-for-esphome`).
+
 This is an ESPHome custom component for the SONOFF TX Ultimate Smart Switch.  
 It gives you the ability to use your Switch with ESPHome, including the main features.
 Thanks to the on_... actions, you can implement your own functions quickly and easily.  
@@ -35,109 +40,46 @@ The screenshot shows an example of the device in Home Assistant after integratio
   
 &nbsp;    
   
-# Installation 
+# Installation
 
-&nbsp;  
-  
-## Minimal code
-This is the needed code to use the tx ultimate with this component. 
-You can use this as base to implement your own features or leave it as it is and go with the main features (switch relay on touch).  
-(Add `_us` to the package name if you want to use the US version of the switch).
-```
-substitutions:
-  name: "shys-tx-ultimate"
-  friendly_name: "SHYS TX Ultimate"
-  relay_count: "2"
+&nbsp;
 
-packages:
-  smarthomeyourself.tx-ultimate: github://SmartHome-yourself/sonoff-tx-ultimate-for-esphome/tx_ultimate.yaml@main
-  
-esphome:
-  name: ${name}
-  name_add_mac_suffix: false
+## Device setups (YAML packages)
 
-api:
+Full ESPHome configurations (standard, US, cover, local, …) with the short filenames (`tx_ult_*.yaml`) live in **[shys-collection](https://github.com/SmartHome-yourself/shys-collection/tree/main/templates/esphome/setups/sonoff-tx-ultimate)**.
 
-ota:
- - platform: esphome
+Overview on the website: [ESPHome Setups – SONOFF TX Ultimate](https://www.smarthomeyourself.de/diy-collections/esphome/esphome-setups-sonoff-tx-ultimate)
 
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-  
-  ap:
-    ssid: ${friendly_name} AP
-    password: "top_secret"
-```  
-  
-&nbsp;  
-  
-## Local use in ESPHome
-You can create your Project yourself without usage of my package by copy the [tx_ultimate_local.yaml](https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome/blob/main/tx_ultimate_local.yaml) into your project.  
-If you want to use the custom component localy, you can copy the [tx_ultimate_touch folder](https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome/tree/main/components/) into your esphome directory or some subfolder and include it local.
-Then you only have to change the source of the external_components entry.
+See the [setup README](https://github.com/SmartHome-yourself/shys-collection/blob/main/templates/esphome/setups/sonoff-tx-ultimate/README.md) for package URLs, variants, and substitutions.
 
-**Example for local custom component**
+This repository contains only the **custom component** and a minimal [component_test.yaml](component_test.yaml) to validate builds.
+
+&nbsp;
+
+## Use the custom component (external)
+
 ```
 external_components:
-  - source: /config/esphome/my_components
+  - source:
+      type: git
+      url: https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome
+      ref: main
     components: [tx_ultimate_touch]
-```  
-  
-&nbsp;  
-  
-## Alternative Blind Control
-![image](https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome/assets/705724/9098ad1d-3a6e-40d8-ad03-d1acfde3cf7a)  
-  
-If you want to use the switch for blind control, you need a slightly different configuration.  
-Especially, the two relays for the motor must be interlocked.  
-This setup works only with the 2- and 3-relay version. In both cases, Relays 1 and 2 are used for motor control, as I couldn't configure interlock dynamically.  
-For switches with 3 relays, the middle button is assigned to the third relay in the cover configuration. So, you control opening and closing using the left and right buttons.
-
-### Minimal Configuration for Blind Control
-The minimal necessary configuration for blinds differs only in the package URL.  
-The timings for `cover_open_duration` and `cover_close_duration` should be as accurate as possible. It's better to have a second too much than too little.
-
 ```
-substitutions:
-  name: "shys-tx-ultimate"
-  friendly_name: "SHYS TX Ultimate"
-  relay_count: "2"
-  
-  cover_open_duration: 25s
-  cover_close_duration: 25s
-  
-packages:
-  smarthomeyourself.tx-ultimate:
-    url: https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome
-    file: tx_ultimate_cover.yaml
-    ref: main
-  
-esphome:
-  name: ${name}
-  name_add_mac_suffix: false
 
-api:
+&nbsp;
 
-ota:
- - platform: esphome
+## Local component copy
 
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-  
-  ap:
-    ssid: ${friendly_name} AP
-    password: "top_secret"
-```
-  
-&nbsp;  
-  
-# Configuration
+Copy the [tx_ultimate_touch folder](https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome/tree/main/components/) into your ESPHome directory and point `external_components` to that path.
+
+&nbsp;
+
+# Configuration (substitutions reference)
 All substitutions are optional, but I recommend specifying at least name, friendly_name, and relay_count.  
 The pins are already specified by the hardware and therefore do not actually have to be changed.  
   
-## Standard Configuration (tx_ultimate.yaml / tx_ultimate_local.yaml)
+## Standard Configuration (tx_ultimate.yaml / tx_ult_local.yaml)
 ```
 substitutions:
   name: "shys-tx-ultimate"
@@ -205,12 +147,12 @@ substitutions:
 ```
   
   
-## Cover Configuration (tx_ultimate_cover.yaml)
+## Cover Configuration (tx_ult_cover.yaml)
 Parameters differ slightly for blinds.
 
 ```
 substitutions:
-  name: "shys-tx-ultimate-cover"
+  name: "shys-txult-cover"
   friendly_name: "TX Ultimate Cover"
 
   relay_count: "3"
@@ -533,15 +475,14 @@ So you can handle all events easy in Home Assistant.
 The long press event is only usable by using the on_long_touch_release action at the moment.  
   
 ### LEDs
-There are 28 addressable LEDs on board. They are implemented as neopixel platform with 2 predefined effects.
+There are 28 addressable LEDs on board (32 on US variants), driven via `esp32_rmt_led_strip` with predefined effects.
 
 **Effects:**
 - Rainbow
 - Pulse
 
-### Media player
-I've added the media_player component in the package. But currently it is not really usable.
-It only produce a lot of noise. I'll update the package if I get it to work propperly.
+### Audio / speaker
+An external I²S DAC is configured via `i2s_audio` + `speaker` (ID `media_out`). Quality is still experimental; the PA power switch (`pa_power`) must be on for the amplifier.
   
 ### Vibration motor  
   
@@ -570,11 +511,11 @@ You can use all components based on their ID.
   
 ### LED Lights
 **28 RGBIC LEDs:** leds  
-  
+
 ### Audio
-**media_player:** media_out  
+**speaker:** media_out  
 **i2s_audio:** audio_i2s  
-  
+
 ### Example code to use the components based on their IDs
 This is a simple example to turn the LEDs on and off, which are defined in the package. 
 *Remember, that this is just an example for ID usage. The on_release is not always triggered. (If you release on another point on the surface as you press). Then the LEDs won't turn off.*

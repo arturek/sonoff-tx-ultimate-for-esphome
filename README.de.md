@@ -4,6 +4,11 @@
 
 
 # SONOFF TX Ultimate für ESPHome (Benutzerdefinierte Komponente)
+
+> **Bestehende Installationen:** Geräte-Konfigurationen werden nicht automatisch migriert; für laufende Setups ist eine einmalige Anpassung erforderlich.  
+> 1. **`packages:`** Die YAML-Pakete (Relais, LEDs, WLAN, …) liegen in der **[shys-collection](https://github.com/SmartHome-yourself/shys-collection/tree/main/templates/esphome/setups/sonoff-tx-ultimate)**. Die `packages:`-URL in der eigenen ESPHome-Konfiguration muss auf den neuen Pfad angepasst werden (Beispiele unter [Installation](#installation)).  
+> 2. **`external_components`:** Die Adresse für die externe Komponente bleibt unverändert und muss nicht angepasst werden — die Custom Component für die Touch-Auswertung verbleibt in diesem Repository (`sonoff-tx-ultimate-for-esphome`).
+
 Dies ist eine benutzerdefinierte ESPHome-Komponente für den SONOFF TX Ultimate Smart Switch.  
 Sie ermöglicht Ihnen die Verwendung Ihres Schalters mit ESPHome und umfasst die wichtigsten Funktionen.
 Dank der on_... Aktionen können Sie schnell und einfach eigene Funktionen implementieren.  
@@ -33,111 +38,48 @@ Mit dem Code **DANIELSCHSONOFF** erhaltet Ihr sogar noch einmal 10% auf eure Bes
 Der Screenshot zeigt ein Beispiel für das Gerät in Home Assistant nach der Integration.  
 ![image](https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome/assets/705724/86a6f88e-b453-492e-b9cf-ab50b69ad2e9)
   
-&nbsp;  
-    
-# Installation 
-
-&nbsp;  
-    
-## Minimal Konfiguration
-Dies ist der benötigte Code, um das tx ultimate mit dieser Komponente zu verwenden.  
-Sie können dies als Basis verwenden, um Ihre eigenen Funktionen zu implementieren oder es so lassen und einfach die Hauptfunktionen nutzen (Relais bei Berührung schalten).  
-```
-substitutions:
-  name: "shys-tx-ultimate"
-  friendly_name: "SHYS TX Ultimate"
-  relay_count: "2"
-
-packages:
-  smarthomeyourself.tx-ultimate: github://SmartHome-yourself/sonoff-tx-ultimate-for-esphome/tx_ultimate.yaml@main
+&nbsp;    
   
-esphome:
-  name: ${name}
-  name_add_mac_suffix: false
+# Installation
 
-api:
+&nbsp;
 
-ota:
- - platform: esphome
+## Geräte-Setups (YAML-Pakete)
 
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-  
-  ap:
-    ssid: ${friendly_name} AP
-    password: "top_secret"
-```  
-  
-&nbsp;  
-  
-## Lokale Verwendung in ESPHome
-Sie können Ihr Projekt selbst erstellen, ohne meine Pakete zu verwenden, indem Sie die [tx_ultimate_local.yaml](https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome/blob/main/tx_ultimate_local.yaml) in Ihr Projekt kopieren.  
-Wenn Sie die benutzerdefinierte Komponente lokal verwenden möchten, können Sie den [tx_ultimate_touch-Ordner](https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome/tree/main/components/) in Ihr ESPHome-Verzeichnis oder einen Unterordner kopieren und lokal einbinden.
-Dann müssen Sie nur noch die Quelle des external_components-Eintrags ändern.
+Die vollständigen ESPHome-Konfigurationen (Standard, US, Cover, lokal, …) mit den Kurznamen (`tx_ult_*.yaml`) liegen in der **[shys-collection](https://github.com/SmartHome-yourself/shys-collection/tree/main/templates/esphome/setups/sonoff-tx-ultimate)**.
 
-**Beispiel für lokale benutzerdefinierte Komponente**
+Übersicht auf der Website: [ESPHome Setups – SONOFF TX Ultimate](https://www.smarthomeyourself.de/diy-collections/esphome/esphome-setups-sonoff-tx-ultimate)
+
+Details zu Package-URLs, Varianten und Substitutions stehen in der [Setup-README](https://github.com/SmartHome-yourself/shys-collection/blob/main/templates/esphome/setups/sonoff-tx-ultimate/README.md).
+
+Dieses Repository enthält nur die **Custom Component** und eine minimale [component_test.yaml](component_test.yaml) zum Validieren von Builds.
+
+&nbsp;
+
+## Custom Component nutzen (extern)
+
 ```
 external_components:
-  - source: /config/esphome/my_components
+  - source:
+      type: git
+      url: https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome
+      ref: main
     components: [tx_ultimate_touch]
-```  
-  
-&nbsp;  
-  
-## Alternative Jalousie-Steuerung
-![image](https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome/assets/705724/9098ad1d-3a6e-40d8-ad03-d1acfde3cf7a)  
-  
-Wer den Schalter zum steuern von Jalousien einsetzen möchte, benötigt eine etwas abweichende Konfiguration.  
-Vor allem müssen die zwei Relais für den Motor gegeneinander gesperrt werden (interlock).   
-Natürlich funktioniert das nur mit der 2- und 3-Relais-Variante. In beiden Fällen wird für die Motorsteuerung Relais 1 und 2 verwendet, da ich das interlock nicht dynamisch konfigurieren konnte.  
-Bei Schaltern mit 3 Relais ist bei der Cover-Konfiguration daher der mittlere Taster mit dem dritten Relais belegt. Öffnen und schließen steuert man also immer mit den Tasten links und rechts.  
-  
-### Minimal Konfiguration für Jalousie-Steuerung
-Grundsätzlich unterscheidet sich die mindestens notwendige Konfiguration für Jalousien nur in der Package-URL.
-Die Zeitangaben für cover_open_duration und cover_close_duration sollten so genau wie möglich angegeben werden. Lieber aber eine Sekunde zu viel, als zu wenig.
-
 ```
-substitutions:
-  name: "shys-tx-ultimate"
-  friendly_name: "SHYS TX Ultimate"
-  relay_count: "2"
-  
-  cover_open_duration: 25s
-  cover_close_duration: 25s
-  
-packages:
-  smarthomeyourself.tx-ultimate:
-    url: https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome
-    file: tx_ultimate_cover.yaml
-    ref: main
-  
-esphome:
-  name: ${name}
-  name_add_mac_suffix: false
 
-api:
+&nbsp;
 
-ota:
- - platform: esphome
+## Lokale Component-Kopie
 
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-  
-  ap:
-    ssid: ${friendly_name} AP
-    password: "top_secret"
-```
-  
-  
-&nbsp;  
-    
-# Konfiguration
+Kopiert den [tx_ultimate_touch-Ordner](https://github.com/SmartHome-yourself/sonoff-tx-ultimate-for-esphome/tree/main/components/) in euer ESPHome-Verzeichnis und verweist `external_components` auf diesen Pfad.
+
+&nbsp;
+
+# Konfiguration (Referenz der Substitutions)
 Alle Ersetzungen sind optional, aber ich empfehle, mindestens `name`, `friendly_name` und `relay_count` anzugeben.  
 Die Pins sind bereits in der Hardware angegeben und müssen daher nicht geändert werden.  
 
-## Standard-Konfiguration (tx_ultimate.yaml / tx_ultimate_local.yaml)
+## Standard-Konfiguration (tx_ultimate.yaml / tx_ult_local.yaml)
 ```
 substitutions:
   name: "shys-tx-ultimate"
@@ -205,12 +147,12 @@ substitutions:
 ```
   
   
-## Cover-Konfiguration (tx_ultimate_cover.yaml)
+## Cover-Konfiguration (tx_ult_cover.yaml)
 Bei der Jalousie weichen die Parameter etwas ab.
 
 ```
 substitutions:
-  name: "shys-tx-ultimate-cover"
+  name: "shys-txult-cover"
   friendly_name: "TX Ultimate Cover"
 
   relay_count: "3"
@@ -534,15 +476,14 @@ So können Sie alle Ereignisse einfach in Home Assistant verarbeiten.
 Das Langzeitdruck-Ereignis kann derzeit nur über die on_long_touch_release-Aktion verwendet werden.  
   
 ### LEDs
-Auf der Platine befinden sich 28 adressierbare LEDs. Sie sind als Neopixel-Plattform mit 2 vordefinierten Effekten implementiert.  
+Auf der Platine befinden sich 28 adressierbare LEDs (32 bei US-Varianten), angetrieben über `esp32_rmt_led_strip` mit vordefinierten Effekten.  
   
 **Effekte:**
 - Rainbow (Regenbogen)
 - Pulse (Pulsieren)
 
-### Media Player
-Ich habe den Media-Player-Komponenten im Paket hinzugefügt. Derzeit ist er jedoch nicht wirklich verwendbar.  
-Er erzeugt nur viel Lärm. Ich werde das Paket aktualisieren, wenn ich es ordnungsgemäß zum Funktionieren bringe.  
+### Audio / Speaker
+Externer I²S-DAC über `i2s_audio` + `speaker` (ID `media_out`). Die Qualität ist weiterhin experimentell; für den Verstärker muss der PA-Power-Schalter (`pa_power`) aktiv sein.  
   
 ### Vibrationsmotor  
   
@@ -571,11 +512,11 @@ Sie können alle Komponenten anhand ihrer ID verwenden.
   
 ### LED-Leuchten
 **28 RGBIC LEDs:** leds  
-  
+
 ### Audio
-**media_player:** media_out  
+**speaker:** media_out  
 **i2s_audio:** audio_i2s  
-  
+
 ### Beispielcode zur Verwendung der Komponenten anhand ihrer IDs
 Dies ist ein einfaches Beispiel, um die in der Konfiguration definierten LEDs ein- und auszuschalten.  
 *Bitte beachten Sie, dass dies nur ein Beispiel für die Verwendung von IDs ist. Das Ereignis `on_release` wird nicht immer ausgelöst, wenn Sie an einer anderen Stelle auf der Oberfläche loslassen, als Sie gedrückt haben. In diesem Fall werden die LEDs nicht ausgeschaltet.*  
